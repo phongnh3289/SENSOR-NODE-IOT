@@ -1,0 +1,6 @@
+-c --cpu Cortex-M4.fp -D__MICROLIB -g -O0 --apcs=interwork -I .\User -I .\TM -I ..\00-STM32_LIBRARIES -I ..\00-HAL_DRIVERS\STM32F4xx_HAL_Driver\Inc -I ..\00-HAL_DRIVERS\CMSIS\Device\ST\STM32F4xx\Include -I ..\00-HAL_DRIVERS\CMSIS\Include -I ..\00-GSM_LIBRARY -I ..\00-GSM_LIBRARY\pt -I ..\00-STM32_LIBRARIES\FreeRTOS\include -I ..\00-STM32_LIBRARIES\FreeRTOS\CMSIS_RTOS -I ..\00-STM32_LIBRARIES\FreeRTOS\portable\RVDS\ARM_CM4F -I ..\00-STM32_LIBRARIES\drivers -I ..\00-STM32_LIBRARIES\drivers -I ..\00-STM32_LIBRARIES\option -I ..\00-STM32_LIBRARIES\option
+-I.\RTE\_STM32F4_DISCOVERY
+-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+-IC:\Keil_v5\ARM\CMSIS\Include
+-D__UVISION_VERSION="526" -DSTM32F407xx -DSTM32F407xx -DUSE_HAL_DRIVER -DARM_MATH_CM4 -D__FPU_PRESENT="1" -DSTM32F4XX -DSTM32F4_DISCOVERY -DHSE_VALUE="8000000" -DRCC_OSCILLATORTYPE="RCC_OSCILLATORTYPE_HSE" -DRCC_PLLM="8" -DRCC_PLLN="336" -DRCC_PLLP="2" -DRCC_PLLQ="7" --C99
+-o .\targets\stm32f4_discovery\stm32f4xx_hal_dma.o --omf_browse .\targets\stm32f4_discovery\stm32f4xx_hal_dma.crf --depend .\targets\stm32f4_discovery\stm32f4xx_hal_dma.d --feedback ".\Targets\STM32F4_DISCOVERY\project.fed" "..\00-HAL_DRIVERS\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c"
