@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Targets\STM32F4_DISCOVERY\project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Targets\STM32F4_DISCOVERY\project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Apr 25 18:11:57 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Thu Apr 25 18:13:32 2019
 <BR><P>
 <H3>Maximum Stack Usage =        440 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1557,7 +1557,8 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_GPIO_INT_EnableClock
 <LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_GPIO_INT_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_OneWire_Init
+<BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_OneWire_Init
 <LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_ADC_INT_InitPin
 <LI><a href="#[1bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_LL_Callback
 </UL>
@@ -2227,14 +2228,15 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_DS18B20_Read
 </UL>
 
-<P><STRONG><a name="[5c]"></a>main</STRONG> (Thumb, 148 bytes, Stack size 0 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 220<LI>Call Chain = main &rArr; TM_USART_Init &rArr; TM_USART_INT_Init &rArr; TM_USART1_InitPins &rArr; TM_GPIO_InitAlternate &rArr; TM_GPIO_INT_Init
+<P><STRONG><a name="[5c]"></a>main</STRONG> (Thumb, 166 bytes, Stack size 16 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 236<LI>Call Chain = main &rArr; TM_USART_Init &rArr; TM_USART_INT_Init &rArr; TM_USART1_InitPins &rArr; TM_GPIO_InitAlternate &rArr; TM_GPIO_INT_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
 <LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_USART_Init
 <LI><a href="#[122]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_RTC_Interrupts
 <LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_RTC_Init
 <LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_RCC_InitSystem
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_GPIO_Init
 <LI><a href="#[16f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_DELAY_Init
 <LI><a href="#[179]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadCreate
 <LI><a href="#[17a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osKernelStart
@@ -2259,7 +2261,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[125]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_RTC_WakeupHandler
 </UL>
 
-<P><STRONG><a name="[125]"></a>TM_RTC_WakeupHandler</STRONG> (Thumb, 618 bytes, Stack size 16 bytes, main.o(.text))
+<P><STRONG><a name="[125]"></a>TM_RTC_WakeupHandler</STRONG> (Thumb, 632 bytes, Stack size 16 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = TM_RTC_WakeupHandler &rArr; lowpass_filter &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_USART_Puts
@@ -2289,7 +2291,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.constdata)
 </UL>
-<P><STRONG><a name="[185]"></a>GSM_SMS_CHECK</STRONG> (Thumb, 3764 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[185]"></a>GSM_SMS_CHECK</STRONG> (Thumb, 3756 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 284<LI>Call Chain = GSM_SMS_CHECK &rArr; GSM_SMS_Send &rArr; GSM_LL_Callback &rArr; TM_USART_Init &rArr; TM_USART_INT_Init &rArr; TM_USART1_InitPins &rArr; TM_GPIO_InitAlternate &rArr; TM_GPIO_INT_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_RTC_GetDateTime
@@ -2317,7 +2319,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.constdata)
 </UL>
-<P><STRONG><a name="[18e]"></a>SEND_STATUS</STRONG> (Thumb, 3422 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[18e]"></a>SEND_STATUS</STRONG> (Thumb, 3442 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 292<LI>Call Chain = SEND_STATUS &rArr; GSM_HTTP_Read &rArr; GSM_LL_Callback &rArr; TM_USART_Init &rArr; TM_USART_INT_Init &rArr; TM_USART1_InitPins &rArr; TM_GPIO_InitAlternate &rArr; TM_GPIO_INT_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[190]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_HTTP_SetData
@@ -2339,7 +2341,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[70]"></a>GSM_Main_Thread</STRONG> (Thumb, 990 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[70]"></a>GSM_Main_Thread</STRONG> (Thumb, 988 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 300<LI>Call Chain = GSM_Main_Thread &rArr; GSM_Init &rArr; GSM_LL_Callback &rArr; TM_USART_Init &rArr; TM_USART_INT_Init &rArr; TM_USART1_InitPins &rArr; TM_GPIO_InitAlternate &rArr; TM_GPIO_INT_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TM_RTC_GetDateTime
@@ -2437,7 +2439,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1c9]"></a>GSM_WaitReady</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, gsm.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[1d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetModel
+<BR><BR>[Called By]<UL><LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetRevision
+<LI><a href="#[1d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetModel
 <LI><a href="#[1cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetManufacturer
 <LI><a href="#[1ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_FUNC_Get
 <LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_FUNC_Set
@@ -2478,7 +2481,6 @@ Global Symbols
 <LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetBatteryInfo
 <LI><a href="#[1d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetSoftwareInfo
 <LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetSerialNumber
-<LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetRevision
 </UL>
 
 <P><STRONG><a name="[1c8]"></a>GSM_Delay</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, gsm.o(.text))
@@ -2904,7 +2906,8 @@ Global Symbols
 <LI><a href="#[1f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexDelete
 <LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexCreate
 </UL>
-<BR>[Called By]<UL><LI><a href="#[1d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetModel
+<BR>[Called By]<UL><LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetRevision
+<LI><a href="#[1d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetModel
 <LI><a href="#[1cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetManufacturer
 <LI><a href="#[1ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_FUNC_Get
 <LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_FUNC_Set
@@ -2953,7 +2956,6 @@ Global Symbols
 <LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetBatteryInfo
 <LI><a href="#[1d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetSoftwareInfo
 <LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetSerialNumber
-<LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GSM_INFO_GetRevision
 </UL>
 
 <P><STRONG><a name="[141]"></a>TM_USART1_ReceiveHandler</STRONG> (Thumb, 12 bytes, Stack size 8 bytes, gsm_ll.o(.text))
