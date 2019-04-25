@@ -15,6 +15,8 @@
 #include "tm_stm32_ds18b20.h"
 #include "tm_stm32_onewire.h"
 //#include "tm_stm32_fatfs.h"
+//#include "fatfs_sd_sdio.h"
+//#include "tm_stm32_fatfs.h"
 #define DEBUG_USART         USART2
 #define DEBUG_USART_PP      TM_USART_PinsPack_1
 #define ON 1
@@ -31,9 +33,10 @@ gvol GSM_t GSM;
 GSM_Result_t gsmRes;
 /* SMS read structure */
 GSM_SMS_Entry_t SMS_Entry;
-
+int sms_count=0;
 /* Pointer to SMS info */
 GSM_SmsInfo_t* SMS_Info = NULL;
+GSM_DateTime_t* DateTimexx = NULL;
 /* GSM pin code */
 #define GSM_PIN         "0000"
 /* GSM APN settings */
@@ -52,13 +55,13 @@ float yo=3500;
 #define 	RC_ADC	  50000000.0		// thong so loc van toc RC=10^6/(2*pi*f_ca't)
 #define  	pi 				3.141593 	// gia tri hang so Pi
 /* Array with data to send */
- uint8_t    send[] = "{ \"request\": \"InsertObservation\", \"service\": \"SOS\", \"version\": \"2.0.0\", \"offering\": \"HCMOffering01\", \"observation\":{ \"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\", \"procedure\": \"HCMProcedure01\", \"observedProperty\": \"device_power\", \"featureOfInterest\": { \"identifier\": { \"value\": \"HCMFeatureOfInterest01\", \"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\" },\"name\": [ { \"value\": \"HCMSensor01\", \"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\" } ], \"sampledFeature\":[ \"http://www.52north.org/test/featureOfInterest/world\" ], \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 10.814829308668465, 106.72269488497925 ], \"crs\": { \"type\": \"name\", \"properties\": { \"name\": \"EPSG:4326\" } } } },\"phenomenonTime\": \"2011-11-11T11:11:15+07:00\", \"resultTime\": \"2011-11-11T11:11:15+07:00\", \"result\": { \"uom\": \"percent\", \"value\": 10 } } }";
+ uint8_t    send[] = "{ \"request\": \"InsertObservation\", \"service\": \"SOS\", \"version\": \"2.0.0\", \"offering\": \"HCMOffering04\", \"observation\":{ \"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\", \"procedure\": \"HCMProcedure04\", \"observedProperty\": \"device_power\", \"featureOfInterest\": { \"identifier\": { \"value\": \"HCMFeatureOfInterest04\", \"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\" },\"name\": [ { \"value\": \"HCMSensor04\", \"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\" } ], \"sampledFeature\":[ \"http://www.52north.org/test/featureOfInterest/world\" ], \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 10.985973608668465, 106.61858928497925 ], \"crs\": { \"type\": \"name\", \"properties\": { \"name\": \"EPSG:4326\" } } } },\"phenomenonTime\": \"2011-11-11T11:11:15+07:00\", \"resultTime\": \"2011-11-11T11:11:15+07:00\", \"result\": { \"uom\": \"percent\", \"value\": 10 } } }";
  uint8_t  send_sms[] = "NHIET DO: 25(do C)\nNANG LUONG PIN: 70(%)\nTHOI GIAN LAY MAU: 05 (phut)\nTRANG THAI: OFF\nTHOI GIAN: 00h00";
- uint8_t send_salty[]="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering01\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure01\",\"observedProperty\": \"measure_water_salinity\",\"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.814829308668465,106.72269488497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2018-10-16T08:53:15+07:00\",\"resultTime\": \"2018-10-26T08:53:15+07:00\",\"result\": {\"uom\": \"perthousand\",\"value\": 40    }}}";
- uint8_t send_temp[]   ="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering01\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure01\",\"observedProperty\": \"device_temperature\",\"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.814829308668465,106.72269488497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2018-10-16T08:53:15+07:00\",\"resultTime\": \"2018-10-26T08:53:15+07:00\",\"result\": {\"uom\": \"Celsius\",\"value\": 40.0}}}";
- uint8_t send_conduct[]="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering01\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure01\",\"observedProperty\": \"measure_water_conductivity\",\"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.814829308668465,106.72269488497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2019-01-18T08:53:15+07:00\",\"resultTime\": \"2019-01-18T08:53:15+07:00\",\"result\": {\"uom\": \"uS/cm\",\"value\": 10000 }}}";
- uint8_t send_tds[]    ="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering01\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure01\",\"observedProperty\": \"measure_water_total_dissolved_solid\",\"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.814829308668465,106.72269488497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2019-01-18T08:53:15+07:00\",\"resultTime\": \"2019-01-18T08:53:15+07:00\",\"result\": {\"uom\": \"ppm\",\"value\": 10000 }}}";
- uint8_t send_wsg[]    ="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering01\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure01\",\"observedProperty\": \"measure_water_specific_gravity\",     \"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor01\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.814829308668465,106.72269488497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2019-01-18T08:53:15+07:00\",\"resultTime\": \"2019-01-18T08:53:15+07:00\",\"result\": {\"uom\": \"specific_gravity\",\"value\": 1.003 }}}";
+ uint8_t send_salty[]="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering04\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure04\",\"observedProperty\": \"measure_water_salinity\",\"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.985973608668465,106.61858928497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2018-10-16T08:53:15+07:00\",\"resultTime\": \"2018-10-26T08:53:15+07:00\",\"result\": {\"uom\": \"perthousand\",\"value\": 40    }}}";
+ uint8_t send_temp[]   ="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering04\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure04\",\"observedProperty\": \"device_temperature\",\"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.985973608668465,106.61858928497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2018-10-16T08:53:15+07:00\",\"resultTime\": \"2018-10-26T08:53:15+07:00\",\"result\": {\"uom\": \"Celsius\",\"value\": 40.0}}}";
+ uint8_t send_conduct[]="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering04\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure04\",\"observedProperty\": \"measure_water_conductivity\",\"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.985973608668465,106.61858928497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2019-01-18T08:53:15+07:00\",\"resultTime\": \"2019-01-18T08:53:15+07:00\",\"result\": {\"uom\": \"uS/cm\",\"value\": 10000 }}}";
+ uint8_t send_tds[]    ="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering04\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure04\",\"observedProperty\": \"measure_water_total_dissolved_solid\",\"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.985973608668465,106.61858928497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2019-01-18T08:53:15+07:00\",\"resultTime\": \"2019-01-18T08:53:15+07:00\",\"result\": {\"uom\": \"ppm\",\"value\": 10000 }}}";
+ uint8_t send_wsg[]    ="{\"request\": \"InsertObservation\",\"service\": \"SOS\",\"version\": \"2.0.0\",\"offering\": \"HCMOffering04\",\"observation\": {\"type\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\"procedure\": \"HCMProcedure04\",\"observedProperty\": \"measure_water_specific_gravity\",     \"featureOfInterest\": {\"identifier\": {\"value\": \"HCMFeatureOfInterest04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"},\"name\": [{\"value\": \"HCMSensor04\",\"codespace\": \"http://www.opengis.net/def/nil/OGC/0/unknown\"}],\"sampledFeature\": [\"http://www.52north.org/test/featureOfInterest/world\"],\"geometry\": {\"type\": \"Point\",\"coordinates\": [10.985973608668465,106.61858928497925],\"crs\": {\"type\": \"name\",\"properties\": {\"name\": \"EPSG:4326\"}}}},\"phenomenonTime\": \"2019-01-18T08:53:15+07:00\",\"resultTime\": \"2019-01-18T08:53:15+07:00\",\"result\": {\"uom\": \"specific_gravity\",\"value\": 1.003 }}}";
 
 #define EXPECTING_SENSORS	1
 /* Thread prototypes */
@@ -100,7 +103,7 @@ int main(void) {
 		TM_DELAY_Init();	/* Init HAL layer */
     //TM_GPIO_Init(GPIOG, GPIO_Pin_13, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Low);
 		//TM_GPIO_Init(GPIOG, GPIO_Pin_14, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Low);
-		TM_GPIO_Init(GPIOA, GPIO_Pin_6, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Low);
+		//TM_GPIO_Init(GPIOA, GPIO_Pin_6, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Low);
 		//TM_GPIO_Init(GPIOA, GPIO_Pin_7, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Low);
 		//TM_GPIO_Init(GPIOE, GPIO_Pin_3, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Low);
 		//TM_DELAY_Init();
@@ -108,21 +111,21 @@ int main(void) {
     TM_USART_Init(DEBUG_USART, DEBUG_USART_PP, 9600);     /* Init USART for debug purpose */
 		TM_USART_Init(USART3, TM_USART_PinsPack_1, 9600);
 		TM_RTC_Init(TM_RTC_ClockSource_External);
-		/*datatime.Day = 29;
-		datatime.Month = 3;
+		/*datatime.Day = 8;
+		datatime.Month = 4;
 		datatime.Year = 19;
-		datatime.WeekDay = 5;
-		datatime.Hours = 10;
-		datatime.Minutes = 44;
-		datatime.Seconds = 00; 
-		*/				/* Save new date and time */
+		datatime.WeekDay = 2;
+		datatime.Hours = 22;
+		datatime.Minutes = 49;
+		datatime.Seconds = 00; */
+						/* Save new date and time */
 		//TM_RTC_SetDateTime(&datatime, TM_RTC_Format_BIN);	
     /* Wakeup IRQ every 60 second */
     TM_RTC_Interrupts(TM_RTC_Int_5s);          
     /* Initialize threads */
 		//TM_OneWire_Init(&OneWire1, GPIOG, GPIO_PIN_11);
-		TM_OneWire_Init(&OneWire1, GPIOB, GPIO_PIN_8);
-		//TM_OneWire_Init(&OneWire1, GPIOD, GPIO_PIN_11);
+		//TM_OneWire_Init(&OneWire1, GPIOE, GPIO_PIN_5);
+		TM_OneWire_Init(&OneWire1, GPIOD, GPIO_PIN_11);
 		devices = TM_OneWire_First(&OneWire1);	
 		/* Get full ROM value, 8 bytes, give location of first byte where to save */
 		TM_OneWire_GetFullROM(&OneWire1, device[0]);		
@@ -152,6 +155,7 @@ int main(void) {
 }
 void TM_RTC_WakeupHandler() {
 	/* Get time */
+	//GSM_DATETIME_Get(&GSM, DateTimexx, 1);
 	//TM_RTC_GetDateTime(&datatime, TM_RTC_Format_BIN);
 	//printf("Time %02d:%02d:%02d\n",datatime.Hours,datatime.Minutes,datatime.Seconds);
 	//printf("Nam:%02d  Thang:%02d  Ngay:%02d\n",datatime.Year,datatime.Month,datatime.Day);
@@ -164,7 +168,7 @@ void TM_RTC_WakeupHandler() {
 	count_time++;
 	//TM_GPIO_TogglePinValue(GPIOG,GPIO_Pin_13);
 	//TM_GPIO_TogglePinValue(GPIOE,GPIO_Pin_3);
-	TM_GPIO_TogglePinValue(GPIOA,GPIO_Pin_6);
+	//TM_GPIO_TogglePinValue(GPIOA,GPIO_Pin_6);
 	//V_LION=9.9->2000V->0%, _LION=12.6->2570->100%
 	//adcValue
 	adcValue=(lowpass_filter(TM_ADC_Read(ADC1, ADC_CHANNEL_0),&yo, RC_ADC)-2000)*100/570;
@@ -172,7 +176,7 @@ void TM_RTC_WakeupHandler() {
 	
 	if(adcValue>99)adcValue=99;
 	if(adcValue<1)adcValue=1;
-	//printf("Battery: %d\n",adcValue);
+  //printf("Battery: %d\n",adcValue);
 		//TM_DS18B20_Read(&OneWire1,device[0], &temps[0]);
 		/* Print temperature */
 	TM_DS18B20_StartAll(&OneWire1);		
@@ -183,7 +187,7 @@ void TM_RTC_WakeupHandler() {
 	TM_DS18B20_Read(&OneWire1,device[0], &temps[0]);
 	tempValue=temps[0];
 	temp_dot=((temps[0]-tempValue)*10);
-	printf("Temp: %f\n",temps[0]);
+	//printf("Temp: %f\n",temps[0]);
 	TM_USART_Puts(USART3,"R\r\n");
 	TM_USART_Gets(USART3, buffer_x, sizeof(buffer_x));
 	//printf(buffer_x);printf("\n");
@@ -320,6 +324,7 @@ while (1) {
                 
 				 while ((SMS_Info = GSM_SMS_GetReceivedInfo(&GSM, 1)) != NULL) {
 					 unaction=0; 
+					 sms_count++;
             /* Read SMS from memory */
             if ((gsmRes = GSM_SMS_Read(&GSM, SMS_Info->Position, &SMS_Entry, 1)) == gsmOK) {
                 //printf("SMS READ OK!\r\n");
@@ -358,6 +363,7 @@ while (1) {
             /* Clear information about new SMS */
             GSM_SMS_ClearReceivedInfo(&GSM, SMS_Info, 1);
 						unaction=1; 
+						if(sms_count==10){GSM_SMS_MassDelete(&GSM, GSM_SMS_MassDelete_All, 1);sms_count=0;}
 }
 }	
 }
