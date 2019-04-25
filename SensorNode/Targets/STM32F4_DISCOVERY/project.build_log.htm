@@ -21,14 +21,16 @@ Target DLL:      Segger\JL2CM3.dll V2.99.31.0
 Dialog DLL:      TCM.DLL V1.36.1.0
  
 <h2>Project:</h2>
-D:\OneDrive - Industrial University of HoChiMinh City\FIRMWARE\2018-2019\GSM_AT_commands_parser\01-EXAMPLE_HTTP_RTOS_ZG407\01-EXAMPLE_HTTP_RTOS.uvprojx
+D:\OneDrive - Industrial University of HoChiMinh City\FIRMWARE\2018-2019\GIT\SENSOR_NODE_IOT\SensorNode\01-EXAMPLE_HTTP_RTOS.uvprojx
 Project File Date:  04/18/2019
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'STM32F4_DISCOVERY'
 compiling main.c...
--D: enumerated type mixed with another type
+User\main.c(99): warning:  #188-D: enumerated type mixed with another type
+  		TM_ADC_Init(ADC1, ADC_CHANNEL_0);
+User\main.c(171): warning:  #188-D: enumerated type mixed with another type
   	adcValue=(lowpass_filter(TM_ADC_Read(ADC1, ADC_CHANNEL_0),&yo, RC_ADC)-2000)*100/570;
 User\main.c(262): warning:  #1035-D: single-precision operand implicitly converted to double-precision
   	y = *y0 + Tx* (x - *y0)/(Tx + RC);
@@ -52,7 +54,7 @@ User\main.c: 11 warnings, 0 errors
 linking...
 Program Size: Code=97386 RO-data=726 RW-data=5688 ZI-data=23504  
 FromELF: creating hex file...
-".\Targets\STM32F4_DISCOVERY\project.axf" - 0 Error(s), 9 Warning(s).
+".\Targets\STM32F4_DISCOVERY\project.axf" - 0 Error(s), 11 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -66,7 +68,7 @@ Package Vendor: Keil
   C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>
